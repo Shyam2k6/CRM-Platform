@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --secondary-color: #0f172a;
+  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  --sidebar-bg: #0f172a;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --border-color: #e2e8f0;
+  
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  color: #0f172a;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism elements */
+.glass-card {
+  background: var(--card-bg) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.08) !important;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Micro-animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* CRM Custom styles */
+.ant-layout {
+  background: transparent !important;
+}
+
+.ant-layout-sider {
+  background: var(--sidebar-bg) !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+.ant-menu {
+  background: transparent !important;
+  border-inline-end: none !important;
+}
+
+.ant-menu-item {
+  border-radius: 8px !important;
+  margin: 4px 8px !important;
+}
+
+.ant-menu-item-selected {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.ant-layout-header {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 24px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Modern Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
