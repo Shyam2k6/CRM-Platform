@@ -1,86 +1,203 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ConfigProvider, Card, Result } from 'antd';
-import MainLayout from './layouts/MainLayout';
-import Dashboard from './pages/Dashboard';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import DashboardLayout from './layouts/DashboardLayout';
+import { Spin } from 'antd';
 
-// Custom Ant Design Theme configuration
-const themeConfig = {
-  token: {
-    colorPrimary: '#4f46e5', // Slate/Indigo Indigo-600
-    colorInfo: '#4f46e5',
-    colorSuccess: '#10b981', // Emerald-500
-    colorWarning: '#f59e0b', // Amber-500
-    colorError: '#ef4444', // Rose-500
-    borderRadius: 8,
-    fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-  },
-  components: {
-    Layout: {
-      headerBg: '#ffffff',
-      siderBg: '#0f172a',
-    },
-    Menu: {
-      darkItemBg: '#0f172a',
-      darkItemColor: '#94a3b8',
-      darkItemSelectedBg: '#4f46e5',
-      darkItemSelectedColor: '#ffffff',
-      darkItemHoverBg: '#1e293b',
-    }
+const HomeRedirect = () => {
+  const { user, loading, isAuthenticated } = useAuth();
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f8fafc' }}>
+        <Spin size="large" tip="Redirecting to landing workspace..." />
+      </div>
+    );
   }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return user.role === 'Employee' ? <Navigate to="/tasks" replace /> : <Navigate to="/dashboard" replace />;
 };
 
-// Clean placeholder page component for in-progress modules
-const ModulePlaceholder = ({ name }) => (
-  <Card className="glass-card" bordered={false} style={{ margin: '12px 0' }}>
-    <Result
-      status="info"
-      title={`${name} Module`}
-      subTitle="This module is planned for a later development phase. All routing, layout architecture, and theme bindings are fully configured."
-    />
-  </Card>
-);
+// Pages
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Leads from './pages/Leads';
+import Opportunities from './pages/Opportunities';
+import Clients from './pages/Clients';
+import Client360 from './pages/Client360';
+import Activities from './pages/Activities';
+import Quotations from './pages/Quotations';
+import Projects from './pages/Projects';
+import Tasks from './pages/Tasks';
+import Invoices from './pages/Invoices';
+import Payments from './pages/Payments';
+import Users from './pages/Users';
+import Notifications from './pages/Notifications';
+import Profile from './pages/Profile';
+import Unauthorized from './pages/Unauthorized';
 
 function App() {
   return (
-    <ConfigProvider theme={themeConfig}>
+    <AuthProvider>
       <Router>
         <Routes>
-          {/* Main Layout containing all nested CRM routes */}
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Dashboard />} />
-            
-            {/* CRM Modules */}
-            <Route path="leads" element={<ModulePlaceholder name="Leads Management" />} />
-            <Route path="opportunities" element={<ModulePlaceholder name="Opportunities & Sales Pipeline" />} />
-            <Route path="clients" element={<ModulePlaceholder name="Clients (Client 360)" />} />
-            <Route path="activities" element={<ModulePlaceholder name="Activities & Follow-ups" />} />
-            <Route path="quotations" element={<ModulePlaceholder name="Quotations & Proposals" />} />
-            
-            {/* Project Modules */}
-            <Route path="projects" element={<ModulePlaceholder name="Projects Management" />} />
-            <Route path="tasks" element={<ModulePlaceholder name="Tasks Board" />} />
-            
-            {/* Finance Modules */}
-            <Route path="invoices" element={<ModulePlaceholder name="Invoicing" />} />
-            <Route path="payments" element={<ModulePlaceholder name="Payments Registry" />} />
-            
-            {/* System Modules */}
-            <Route path="users" element={<ModulePlaceholder name="User Directory & Role Management" />} />
-            <Route path="profile" element={<ModulePlaceholder name="User Profile" />} />
-          </Route>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* Fallback routes */}
-          <Route path="*" element={
-            <Result
-              status="404"
-              title="404"
-              subTitle="Sorry, the page you visited does not exist."
-            />
-          } />
+          {/* Protected Business Dashboard Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Sales', 'Project Manager', 'Finance']}>
+                <DashboardLayout>
+                  <Dashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/leads"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Sales']}>
+                <DashboardLayout>
+                  <Leads />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/opportunities"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Sales']}>
+                <DashboardLayout>
+                  <Opportunities />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/clients"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Sales', 'Finance', 'Project Manager']}>
+                <DashboardLayout>
+                  <Clients />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/clients/:id"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Sales', 'Finance', 'Project Manager']}>
+                <DashboardLayout>
+                  <Client360 />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/activities"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Sales', 'Project Manager']}>
+                <DashboardLayout>
+                  <Activities />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/quotations"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Sales']}>
+                <DashboardLayout>
+                  <Quotations />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Project Manager', 'Employee', 'Sales']}>
+                <DashboardLayout>
+                  <Projects />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tasks"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Project Manager', 'Employee', 'Sales']}>
+                <DashboardLayout>
+                  <Tasks />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/invoices"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Finance']}>
+                <DashboardLayout>
+                  <Invoices />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payments"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management', 'Finance']}>
+                <DashboardLayout>
+                  <Payments />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute allowedRoles={['Admin', 'Management']}>
+                <DashboardLayout>
+                  <Users />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Notifications />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Profile />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Default home redirect & catch-all */}
+          <Route path="/" element={<HomeRedirect />} />
+          <Route path="*" element={<HomeRedirect />} />
         </Routes>
       </Router>
-    </ConfigProvider>
+    </AuthProvider>
   );
 }
 

@@ -147,6 +147,13 @@ exports.convertOpportunityToClient = async (req, res, next) => {
     opportunity.associatedClient = client._id;
     await opportunity.save();
 
+    // Link all existing quotations from this opportunity to the new client
+    const Quotation = require('../models/Quotation');
+    await Quotation.updateMany(
+      { associatedOpportunity: opportunity._id },
+      { associatedClient: client._id }
+    );
+
     res.status(200).json({
       success: true,
       message: 'Opportunity successfully converted to Client',

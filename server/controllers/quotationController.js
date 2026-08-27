@@ -43,7 +43,15 @@ exports.getQuotations = async (req, res, next) => {
     const { clientId, opportunityId } = req.query;
     const query = {};
 
-    if (clientId) query.associatedClient = clientId;
+    if (clientId) {
+      const Client = require('../models/Client');
+      const clientObj = await Client.findById(clientId);
+      const queryOr = [{ associatedClient: clientId }];
+      if (clientObj && clientObj.originOpportunity) {
+        queryOr.push({ associatedOpportunity: clientObj.originOpportunity });
+      }
+      query.$or = queryOr;
+    }
     if (opportunityId) query.associatedOpportunity = opportunityId;
 
     const quotations = await Quotation.find(query)

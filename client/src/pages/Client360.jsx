@@ -208,45 +208,6 @@ const Client360 = () => {
         </Row>
       )
     },
-    {
-      key: '4',
-      label: 'Quotations',
-      children: (
-        <Card title="Proposals issued" bordered={false}>
-          {quotations.length === 0 ? (
-            <Empty description="No quotations generated for this client yet" />
-          ) : (
-            <div>Quotations lists go here.</div>
-          )}
-        </Card>
-      )
-    },
-    {
-      key: '5',
-      label: 'Projects',
-      children: (
-        <Card title="Active Client Projects" bordered={false}>
-          {projects.length === 0 ? (
-            <Empty description="No active project execution linked to this client" />
-          ) : (
-            <div>Projects list goes here.</div>
-          )}
-        </Card>
-      )
-    },
-    {
-      key: '6',
-      label: 'Billing & Invoices',
-      children: (
-        <Card title="Invoices issued" bordered={false}>
-          {invoices.length === 0 ? (
-            <Empty description="No invoices billed to this client account" />
-          ) : (
-            <div>Invoices list goes here.</div>
-          )}
-        </Card>
-      )
-    }
   ];
 
   return (

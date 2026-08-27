@@ -9,8 +9,25 @@ exports.getActivities = async (req, res, next) => {
     const { associatedId, associatedType } = req.query;
     const query = {};
 
-    if (associatedId) query.associatedId = associatedId;
-    if (associatedType) query.associatedType = associatedType;
+    if (associatedId && associatedType === 'Client') {
+      const Client = require('../models/Client');
+      const Opportunity = require('../models/Opportunity');
+      const client = await Client.findById(associatedId);
+      const ids = [associatedId];
+      if (client) {
+        if (client.originOpportunity) {
+          ids.push(client.originOpportunity.toString());
+          const opp = await Opportunity.findById(client.originOpportunity);
+          if (opp && opp.associatedLead) {
+            ids.push(opp.associatedLead.toString());
+          }
+        }
+      }
+      query.associatedId = { $in: ids };
+    } else {
+      if (associatedId) query.associatedId = associatedId;
+      if (associatedType) query.associatedType = associatedType;
+    }
 
     const activities = await Activity.find(query)
       .populate('createdBy', 'name email')
