@@ -7,11 +7,11 @@ const router = express.Router();
 router.use(protect);
 
 router.route('/')
-  .get(authorize('Admin', 'Management', 'Sales'), getOpportunities)
+  .get(authorize('Admin', 'Management', 'Sales', 'Project Manager', 'Finance'), getOpportunities)
   .post(authorize('Admin', 'Management', 'Sales'), createOpportunity);
 
 router.route('/:id')
-  .get(authorize('Admin', 'Management', 'Sales'), getOpportunity)
+  .get(authorize('Admin', 'Management', 'Sales', 'Project Manager', 'Finance'), getOpportunity)
   .put(authorize('Admin', 'Management', 'Sales'), updateOpportunity)
   .delete(authorize('Admin', 'Management'), deleteOpportunity);
 
